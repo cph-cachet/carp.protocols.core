@@ -52,6 +52,7 @@ abstract class ConcreteTypesSerializationTest(
         {
             // Get serializer.
             val type = toSerialize::class
+            @Suppress( "UNCHECKED_CAST" )
             val serializer = polymorphicSerializers[ type ] as? KSerializer<Any>
             assertNotNull( serializer, "No serializer registered for type '$type'" )
 
@@ -75,8 +76,10 @@ fun getPolymorphicSerializers( serialModule: SerializersModule ): Map<KClass<*>,
         {
             val serializers: MutableMap<KClass<*>, KSerializer<*>> = mutableMapOf()
 
-            override fun <T : Any> contextual( kClass: KClass<T>, serializer: KSerializer<T> ) =
-                throw UnsupportedOperationException()
+            override fun <T : Any> contextual(
+                kClass: KClass<T>,
+                provider: (typeArgumentsSerializers: List<KSerializer<*>>) -> KSerializer<*>
+            ) = throw UnsupportedOperationException()
 
             override fun <Base : Any, Sub : Base> polymorphic(
                 baseClass: KClass<Base>,

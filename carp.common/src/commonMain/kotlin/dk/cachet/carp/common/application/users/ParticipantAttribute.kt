@@ -113,7 +113,7 @@ sealed class ParticipantAttribute
         // Early out in case data is of the wrong type.
         val isCorrectDataType = when ( this )
         {
-            is CustomParticipantAttribute<*> -> data is CustomInput<*> && isValidCustomData( inputElement, data )
+            is CustomParticipantAttribute<*> -> data is CustomInput && isValidCustomData( inputElement, data )
             is DefaultParticipantAttribute -> registeredInputDataTypes.dataClasses[ inputType ]!!.isInstance( data )
         }
         if ( !isCorrectDataType ) return false
@@ -139,7 +139,7 @@ sealed class ParticipantAttribute
         // Custom input should be wrapped by `CustomInput` and contain an object of the expected input type.
         if ( this is CustomParticipantAttribute<*> )
         {
-            require( data is CustomInput<*> && isValidCustomData( inputElement, data ) )
+            require( data is CustomInput && isValidCustomData( inputElement, data ) )
                 { "Data is not of expected type for this attribute." }
             return data.input
         }
@@ -152,6 +152,6 @@ sealed class ParticipantAttribute
         return converter( data )
     }
 
-    private fun isValidCustomData( inputElement: InputElement<*>, data: CustomInput<*> ) =
+    private fun isValidCustomData( inputElement: InputElement<*>, data: CustomInput ) =
         inputElement.getDataClass().isInstance( data.input )
 }

@@ -1,7 +1,7 @@
 import { expect } from 'chai'
 import VerifyModule from './VerifyModule'
 
-import { kotlinx } from 'kotlinx-serialization-kotlinx-serialization-json-jsLegacy'
+import { kotlinx } from 'kotlinx-serialization-kotlinx-serialization-json-js-legacy'
 import Json = kotlinx.serialization.json.Json
 
 import { dk as cdk } from 'carp.core-kotlin-carp.common'

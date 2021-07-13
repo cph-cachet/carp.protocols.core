@@ -32,7 +32,7 @@ import kotlin.test.*
 class StudiesCodeSamples
 {
     @Test
-    @Suppress( "UnusedPrivateMember" )
+    @Suppress( "UnusedPrivateMember", "UNUSED_VARIABLE" )
     fun readme() = runSuspendTest {
         val (studyService, recruitmentService) = createEndpoints()
 

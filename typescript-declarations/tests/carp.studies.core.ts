@@ -8,9 +8,9 @@ import HashSet = kotlin.collections.HashSet
 import toMap = kotlin.collections.toMap_v2dak7$
 import toSet = kotlin.collections.toSet_us0mfu$
 
-import { kotlinx } from 'kotlinx-serialization-kotlinx-serialization-json-jsLegacy'
+import { kotlinx } from 'kotlinx-serialization-kotlinx-serialization-json-js-legacy'
 import Json = kotlinx.serialization.json.Json
-import { kotlinx as kotlinxcore } from 'kotlinx-serialization-kotlinx-serialization-core-jsLegacy'
+import { kotlinx as kotlinxcore } from 'kotlinx-serialization-kotlinx-serialization-core-js-legacy'
 import ListSerializer = kotlinxcore.serialization.builtins.ListSerializer_swdriu$
 
 import { dk as cdk } from 'carp.core-kotlin-carp.common'

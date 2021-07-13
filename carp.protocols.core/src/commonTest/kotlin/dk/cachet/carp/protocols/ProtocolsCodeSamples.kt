@@ -21,7 +21,7 @@ import kotlin.test.*
 class ProtocolsCodeSamples
 {
     @Test
-    @Suppress( "UnusedPrivateMember" )
+    @Suppress( "UnusedPrivateMember", "UNUSED_VARIABLE" )
     fun readme() = runSuspendTest {
         // Create a new study protocol.
         val owner = ProtocolOwner()

@@ -25,7 +25,7 @@ import kotlin.test.*
 class DeploymentCodeSamples
 {
     @Test
-    @Suppress( "UnusedPrivateMember" )
+    @Suppress( "UnusedPrivateMember", "UNUSED_VARIABLE" )
     fun readme() = runSuspendTest {
         val deploymentService: DeploymentService = createDeploymentEndpoint()
         val trackPatientStudy: StudyProtocol = createExampleProtocol()

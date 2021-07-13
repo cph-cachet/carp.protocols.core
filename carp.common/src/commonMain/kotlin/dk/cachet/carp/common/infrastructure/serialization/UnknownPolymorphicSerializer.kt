@@ -106,17 +106,11 @@ abstract class UnknownPolymorphicSerializer<P : Any, W : P>(
         return createWrapper( className, jsonSource, decoder.json )
     }
 
-    // HACK: Since `Json.configuration` is internal, this is a workaround to find the configured class discriminator.
-    //   I requested it to be public: https://github.com/Kotlin/kotlinx.serialization/issues/1323
     private fun getClassDiscriminator( json: Json ): String
     {
-        var extractedDiscriminator: String? = null
-        Json( json )
-        {
-            if ( useArrayPolymorphism ) throw unsupportedException
-            extractedDiscriminator = classDiscriminator
-        }
-        return extractedDiscriminator!!
+        if ( json.configuration.useArrayPolymorphism ) throw unsupportedException
+
+        return json.configuration.classDiscriminator
     }
 
     /**

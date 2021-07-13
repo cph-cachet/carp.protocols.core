@@ -5,7 +5,7 @@ declare module 'carp.core-kotlin-carp.deployments.core'
     import HashMap = kotlin.collections.HashMap
     import HashSet = kotlin.collections.HashSet
 
-    import { kotlinx } from 'kotlinx-serialization-kotlinx-serialization-json-jsLegacy'
+    import { kotlinx } from 'kotlinx-serialization-kotlinx-serialization-json-js-legacy'
     import Json = kotlinx.serialization.json.Json
 
     import { dk as cdk } from 'carp.core-kotlin-carp.common'

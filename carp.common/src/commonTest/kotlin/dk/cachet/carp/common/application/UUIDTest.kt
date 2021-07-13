@@ -22,12 +22,12 @@ class UUIDTest
         assertEquals( id, parsed )
     }
 
+    @Serializable
+    data class Id( val id: UUID? )
+
     @Test
     fun can_serialize_and_deserialize_nullable_UUID()
     {
-        @Serializable
-        data class Id( val id: UUID? )
-
         val json = createDefaultJSON()
 
         val id = Id( UUID( "00000000-0000-0000-0000-000000000000" ) )

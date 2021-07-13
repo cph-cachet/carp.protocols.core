@@ -1,5 +1,6 @@
 package dk.cachet.carp.common.infrastructure.serialization
 
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Polymorphic
 import kotlinx.serialization.Serializable
@@ -143,6 +144,7 @@ class UnknownPolymorphicSerializerTest
     }
 
     @Test
+    @ExperimentalSerializationApi
     fun supports_non_json_encoders_for_known_types()
     {
         val toSerialize = DerivingType( "Test" )
@@ -154,6 +156,7 @@ class UnknownPolymorphicSerializerTest
     }
 
     @Test
+    @ExperimentalSerializationApi
     fun does_not_support_non_json_encoders_for_unknown_types()
     {
         class UnregisteredType( override val toOverrideProperty: String ) : BaseType()

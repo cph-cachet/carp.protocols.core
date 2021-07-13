@@ -1,4 +1,4 @@
-declare module 'kotlinx-serialization-kotlinx-serialization-core-jsLegacy'
+declare module 'kotlinx-serialization-kotlinx-serialization-core-js-legacy'
 {
     namespace kotlinx.serialization.builtins
     {

@@ -13,14 +13,14 @@ buildscript {
 
         versions = [
             // Kotlin multiplatform versions.
-            kotlin:'1.4.31',
-            serialization:'1.1.0',
-            coroutines:'1.4.3',
+            kotlin:'1.5.21',
+            serialization:'1.2.2',
+            coroutines:'1.5.1',
 
             // JVM versions.
-            jvmTarget:'1.6',
+            jvmTarget:'1.8',
             jUnit5:'5.7.2',
-            dokkaPlugin:'0.9.18',
+            dokkaPlugin:'1.5.0',
             reflections:'0.9.12',
 
             // JS versions.
@@ -128,15 +128,19 @@ configure( subprojects - detektModule ) {
     // > repository.password=<SONATYPE PASSWORD>
     apply plugin: 'maven-publish'
     apply plugin: 'org.jetbrains.dokka'
-    dokka {
-        outputFormat = 'html'
-        outputDirectory = "$buildDir/javadoc"
+    task dokkaJvmJavadoc(type: org.jetbrains.dokka.gradle.DokkaTask) {
+        dokkaSourceSets {
+            register("jvm") {
+                platform.set(org.jetbrains.dokka.Platform.jvm)
+                sourceRoots.from(kotlin.sourceSets.getByName("jvmMain").kotlin.srcDirs)
+            }
+        }
     }
     task javadocJar(type: Jar) {
         group JavaBasePlugin.DOCUMENTATION_GROUP
         description 'Create javadoc jar using Dokka'
         archiveClassifier = "javadoc"
-        from dokka
+        from dokkaJvmJavadoc
     }
     publishing {
         publications {
@@ -230,17 +234,26 @@ task setupTsProject(type: NpmTask) {
     args = ['install']
 }
 task copyTestJsSources(type: Copy, dependsOn: setupTsProject) {
-    // First compile all subprojects for which TypeScript declarations are defined.
+    // Make sure no old imported packages are left behind.
+    def importedPackages = file("$rootDir/build/js/packages_imported")
+    if (importedPackages.exists()) importedPackages.eachFile { it.delete() }
+
+    // Compile all subprojects for which TypeScript declarations are defined.
     def projects = coreModules + commonModule
     projects.each { dependsOn("${it.name}:jsBrowserDistribution") }
 
-    projects.each {
-        // Copy JS packages into ...
-        from "${it.rootDir}/build/js/node_modules"
+    // Copy compiled sources and dependencies to test project node_modules.
+    from "$rootDir/build/js/packages"
+    from(importedPackages) {
+        eachFile {
+            def path = it.path
+            if (path == ".visited") return // We don't need this file.
 
-        // ... 'node_modules' so that test can retrieve dependencies.
-        into "./${typescriptFolder}/node_modules"
+            // Remove intermediate version directory: e.g. "kotlin/1.5.10/kotlin.js"
+            it.path = path.replaceFirst(/\d+\.\d+.\d+\//, "")
+        }
     }
+    into "./$typescriptFolder/node_modules"
 }
 task compileTs(type: NpmTask, dependsOn: copyTestJsSources) {
     workingDir = file(typescriptFolder)
@@ -346,36 +359,4 @@ configure( rootProject )
     }
     tasks.detekt.jvmTarget = "1.8"
     tasks.detekt.dependsOn ":carp.detekt:assemble" // Ensure 'carp.detekt' is built prior to running code analysis.
-}
-
-
-// HACK: Dokka currently does not work for multiplatform projects.
-// The following configuration is a workaround to configure Dokka for JVM solely:
-// https://discuss.kotlinlang.org/t/how-to-configure-dokka-for-kotlin-multiplatform/9834
-configure( subprojects - detektModule ) {
-    dokka {
-        kotlinTasks { [] }
-        // Dokka fails to retrieve sources from multiplatform tasks. Setting this as empty avoids exceptions.
-        sourceRoot {
-            path = kotlin.sourceSets.commonMain.kotlin.srcDirs[0] // There is only one source dir.
-            platforms = ["Common"]
-        }
-        sourceRoot {
-            path = kotlin.sourceSets.jvmMain.kotlin.srcDirs[0] // There is only one source dir.
-            platforms = ["JVM"]
-        }
-    }
-}
-// HACK: Manually add source dependencies of core modules to 'common' so that Dokka can resolve them.
-configure( coreModules ) {
-    dokka {
-        sourceRoot {
-            path = project(':carp.common').kotlin.sourceSets.commonMain.kotlin.srcDirs[0] // There is only one source dir.
-            platforms = ["Common"]
-        }
-        sourceRoot {
-            path = project(':carp.common').kotlin.sourceSets.jvmMain.kotlin.srcDirs[0] // There is only one source dir.
-            platforms = ["JVM"]
-        }
-    }
 }

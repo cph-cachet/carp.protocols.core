@@ -26,7 +26,7 @@ abstract class ChannelConventionEventBus : EventBus()
     {
         handlers
             .groupBy { it.eventSource }
-            .forEach { (source, handlers) -> subscribeToChannel( source, ::redirectEvent ) }
+            .forEach { (source, _) -> subscribeToChannel( source, ::redirectEvent ) }
     }
 
     private suspend fun redirectEvent( event: IntegrationEvent<*> )

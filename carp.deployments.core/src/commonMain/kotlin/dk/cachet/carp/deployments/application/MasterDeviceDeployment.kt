@@ -76,6 +76,7 @@ data class MasterDeviceDeployment(
      */
     val lastUpdateDate: DateTime =
         // TODO: Remove this workaround once JS serialization bug is fixed: https://github.com/Kotlin/kotlinx.serialization/issues/716
+        @Suppress( "SENSELESS_COMPARISON" )
         if ( connectedDeviceConfigurations == null || configuration == null ) DateTime.now()
         else connectedDeviceConfigurations.values.plus( configuration )
             .map { it.registrationCreationDate.msSinceUTC }

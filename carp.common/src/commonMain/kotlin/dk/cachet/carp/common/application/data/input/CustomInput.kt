@@ -24,7 +24,8 @@ import kotlin.reflect.KClass
  */
 @Serializable( CustomInputSerializer::class )
 @SerialName( CUSTOM_INPUT_TYPE_NAME )
-data class CustomInput<T : Any>( val input: T ) : Data
+@Suppress( "Immutable" ) // TODO: `assumeImmutable` configuration in detekt.yml is not working.
+data class CustomInput( val input: Any ) : Data
 
 
 /**
@@ -33,10 +34,10 @@ data class CustomInput<T : Any>( val input: T ) : Data
  * @param supportedDataTypes The input data types this serializer can serialize.
  *   A serializer should be registered for these classes.
  */
-class CustomInputSerializer( vararg supportedDataTypes: KClass<*> ) : KSerializer<CustomInput<*>>
+class CustomInputSerializer( vararg supportedDataTypes: KClass<*> ) : KSerializer<CustomInput>
 {
     @InternalSerializationApi
-    // TODO: Can we use the fully qualified type name to register serializers here, like kotlinx.serialization doess? How?
+    // TODO: Can we use the fully qualified type name to register serializers here, like kotlinx.serialization does? How?
     val dataTypeMap: Map<String, KSerializer<out Any>> = supportedDataTypes.map { it.simpleName!! to it.serializer() }.toMap()
 
     @ExperimentalSerializationApi
@@ -49,7 +50,7 @@ class CustomInputSerializer( vararg supportedDataTypes: KClass<*> ) : KSerialize
 
     @ExperimentalSerializationApi
     @InternalSerializationApi
-    override fun deserialize( decoder: Decoder ): CustomInput<*> =
+    override fun deserialize( decoder: Decoder ): CustomInput =
         decoder.decodeStructure( descriptor )
         {
             // Read dataType.
@@ -67,7 +68,7 @@ class CustomInputSerializer( vararg supportedDataTypes: KClass<*> ) : KSerialize
 
     @ExperimentalSerializationApi
     @InternalSerializationApi
-    override fun serialize( encoder: Encoder, value: CustomInput<*> ) =
+    override fun serialize( encoder: Encoder, value: CustomInput ) =
         encoder.encodeStructure( descriptor )
         {
             val input = value.input

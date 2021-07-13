@@ -20,17 +20,3 @@ kotlin {
         }
     }
 }
-
-// HACK: Dokka currently does not work for multiplatform projects.
-// The following is a workaround to load dependent sources manually.
-dokka {
-    // Add source sets of 'carp.protocols.core'.
-    sourceRoot {
-        path = project(':carp.protocols.core').kotlin.sourceSets.commonMain.kotlin.srcDirs[0] // There is only one source dir.
-        platforms = ["Common"]
-    }
-    sourceRoot {
-        path = project(':carp.protocols.core').kotlin.sourceSets.jvmMain.kotlin.srcDirs[0] // There is only one source dir.
-        platforms = ["JVM"]
-    }
-}

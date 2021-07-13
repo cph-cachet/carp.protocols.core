@@ -5,7 +5,7 @@ import { kotlin } from 'kotlin'
 import { Long } from 'kotlin'
 import toSet = kotlin.collections.toSet_us0mfu$
 
-import { kotlinx } from 'kotlinx-serialization-kotlinx-serialization-json-jsLegacy'
+import { kotlinx } from 'kotlinx-serialization-kotlinx-serialization-json-js-legacy'
 import Json = kotlinx.serialization.json.Json
 
 import { dk } from 'carp.core-kotlin-carp.common'

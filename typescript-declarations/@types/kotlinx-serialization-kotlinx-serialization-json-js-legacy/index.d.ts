@@ -1,4 +1,4 @@
-declare module 'kotlinx-serialization-kotlinx-serialization-json-jsLegacy'
+declare module 'kotlinx-serialization-kotlinx-serialization-json-js-legacy'
 {
     namespace kotlinx.serialization.json
     {
